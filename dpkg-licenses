@@ -34,7 +34,7 @@ esac
 SCRIPTLIB=$(dirname $(readlink -f "$0"))/lib/
 test -d "$SCRIPTLIB"
 
-printf "Name;Version;License;Homepage;Description"
+printf "Name;Version;License;Homepage;Description\n"
 
 COLUMNS=2000 dpkg -l | grep '^.[iufhwt]' | while read pState package pVer pArch pDesc; do
   homepage=$(apt-cache show $package | grep 'Homepage:' | head -1 | cut -d ' ' -f 2)
