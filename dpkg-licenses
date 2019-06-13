@@ -34,11 +34,12 @@ esac
 SCRIPTLIB=$(dirname $(readlink -f "$0"))/lib/
 test -d "$SCRIPTLIB"
 
-format='%-2s  %-30s %-30s %-6s %-60s %s\n'
-printf "$format" "St" "Name" "Version" "Arch" "Description" "Licenses"
-printf "$format" "--" "----" "-------" "----" "-----------" "--------"
+printf "Name;Version;License;Homepage;Description"
 
 COLUMNS=2000 dpkg -l | grep '^.[iufhwt]' | while read pState package pVer pArch pDesc; do
+  homepage=$(apt-cache show ${package} | grep 'Homepage:' | head -1 | cut -d ' ' -f 2)
+  [ -n "$homepage" ] || homepage='unknown'
+
   license=
   for method in "$SCRIPTLIB"/reader*; do
     [ -f "$method" ] || continue
@@ -51,6 +52,6 @@ COLUMNS=2000 dpkg -l | grep '^.[iufhwt]' | while read pState package pVer pArch 
   done
   [ -n "$license" ] || license='unknown'
 
-  printf "$format" "$pState" "${package:0:30}" "${pVer:0:30}" "${pArch:0:6}" "${pDesc:0:60}" "$license"
+  printf "%s;%s;%s;%s;%s\n", $package, $pVer, $license, $homepage, $pDesc
 done
 
