@@ -37,7 +37,7 @@ test -d "$SCRIPTLIB"
 printf "Name;Version;License;Homepage;Description"
 
 COLUMNS=2000 dpkg -l | grep '^.[iufhwt]' | while read pState package pVer pArch pDesc; do
-  homepage=$(apt-cache show ${package} | grep 'Homepage:' | head -1 | cut -d ' ' -f 2)
+  homepage=$(apt-cache show $package | grep 'Homepage:' | head -1 | cut -d ' ' -f 2)
   [ -n "$homepage" ] || homepage='unknown'
 
   license=
@@ -52,6 +52,6 @@ COLUMNS=2000 dpkg -l | grep '^.[iufhwt]' | while read pState package pVer pArch 
   done
   [ -n "$license" ] || license='unknown'
 
-  printf "%s;%s;%s;%s;%s\n", $package, $pVer, $license, $homepage, $pDesc
+  printf "%s;%s;%s;%s;\"%s\"\n" "$package" "$pVer" "$license" "$homepage" "$pDesc"
 done
 
